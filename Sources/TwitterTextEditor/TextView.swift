@@ -68,7 +68,7 @@ protocol TextViewTextPasteDelegate: UITextPasteDelegate {
 /**
  A base text view.
  */
-final class TextView: UITextView {
+open class TextView: UITextView {
     private var preferredTextInputModePrimaryLanguage: String?
 
     /**
@@ -175,7 +175,7 @@ final class TextView: UITextView {
 
     private let pasteboardObserverCache = TextInputPasteboardObserverCache<Bool>()
 
-    override var pasteConfiguration: UIPasteConfiguration? {
+    open override var pasteConfiguration: UIPasteConfiguration? {
         get {
             super.pasteConfiguration
         }
@@ -187,7 +187,7 @@ final class TextView: UITextView {
 
     // MARK: - UIResponder
 
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if !changeTextWritingDirectionActionsEnabled,
            action == #selector(makeTextWritingDirectionLeftToRight(_:)) ||
            action == #selector(makeTextWritingDirectionRightToLeft(_:))
@@ -251,7 +251,7 @@ final class TextView: UITextView {
     private let preferredTextInputModeContextIdentifier = ".TTETwitterTextEditorTextViewPreferredInputModeContextIdentifier"
 
     @discardableResult
-    override func becomeFirstResponder() -> Bool {
+    open override func becomeFirstResponder() -> Bool {
         let result = super.becomeFirstResponder()
         if result {
             if shouldWorkaroundTextInputModeBug {
@@ -265,7 +265,7 @@ final class TextView: UITextView {
 
     // MARK: - UIResponder (UIResponderInputViewAdditions)
 
-    override var textInputContextIdentifier: String? {
+    open override var textInputContextIdentifier: String? {
         if shouldWorkaroundTextInputModeBug, preferredTextInputModePrimaryLanguage != nil {
             log(type: .debug, "Use text input context identifier: %@", preferredTextInputModeContextIdentifier)
             return preferredTextInputModeContextIdentifier
@@ -274,7 +274,7 @@ final class TextView: UITextView {
         return super.textInputContextIdentifier
     }
 
-    override var textInputMode: UITextInputMode? {
+    open override var textInputMode: UITextInputMode? {
         if let preferredTextInputModePrimaryLanguage = preferredTextInputModePrimaryLanguage,
            let inputMode = UITextInputMode.activeInputModes.first(where: { inputMode in
                inputMode.primaryLanguage == preferredTextInputModePrimaryLanguage
@@ -294,7 +294,7 @@ final class TextView: UITextView {
     // Only `U+000A` ("\n") is a valid text that return text input insert.
     private let returnTextInputInsertText = "\n"
 
-    override func insertText(_ text: String) {
+    open override func insertText(_ text: String) {
         if text == returnTextInputInsertText,
            let textViewTextInputDelegate = textViewTextInputDelegate,
            !textViewTextInputDelegate.textViewShouldReturn(self)
@@ -305,7 +305,7 @@ final class TextView: UITextView {
         super.insertText(text)
     }
 
-    override func deleteBackward() {
+    open override func deleteBackward() {
         /*
          UIKit bug workaround
 
@@ -327,7 +327,7 @@ final class TextView: UITextView {
         super.deleteBackward()
     }
 
-    override func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {
+    open override func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {
         super.setBaseWritingDirection(writingDirection, for: range)
 
         textViewTextInputDelegate?.textView(self, didChangeBaseWritingDirection: writingDirection, forRange: range)
@@ -335,7 +335,7 @@ final class TextView: UITextView {
 
     // MARK: - UIPasteConfigurationSupporting
 
-    override func canPaste(_ itemProviders: [NSItemProvider]) -> Bool {
+    open override func canPaste(_ itemProviders: [NSItemProvider]) -> Bool {
         /*
          UIKit behavior note
 
@@ -404,7 +404,7 @@ final class TextView: UITextView {
         }
     }
 
-    override var delegate: UITextViewDelegate? {
+    open override var delegate: UITextViewDelegate? {
         get {
             super.delegate
         }

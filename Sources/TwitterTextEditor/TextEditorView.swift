@@ -351,7 +351,10 @@ public final class TextEditorView: UIView {
      - Parameters:
        - frame: The frame rectangle for the text editor view.
      */
-    public override init(frame: CGRect) {
+    public init(
+        frame: CGRect,
+        textViewFactory: (NSTextContainer) -> TextView = { .init(frame: .zero, textContainer: $0) }
+    ) {
         textStorage = NSTextStorage()
 
         let layoutManager = LayoutManager()
