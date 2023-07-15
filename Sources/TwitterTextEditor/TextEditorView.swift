@@ -363,7 +363,7 @@ public final class TextEditorView: UIView {
         let textContainer = NSTextContainer(size: .zero)
         layoutManager.addTextContainer(textContainer)
 
-        textView = TextView(frame: .zero, textContainer: textContainer)
+        textView = textViewFactory(textContainer)
 
         editingContent = textView.editingContent
 
